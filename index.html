@@ -1,0 +1,949 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Presensi Digital - 2 Pilihan Absensi</title>
+  <meta name="description" content="Pilihan paket absensi digital dengan dua pilihan: Presensi Cloud berlangganan dan Presensi Mandiri sekali bayar." />
+  <meta name="theme-color" content="#0b76ef" />
+  <link rel="icon" type="image/svg+xml" href="assets/fingerprint.svg" />
+  <link rel="icon" type="image/png" sizes="192x192" href="assets/fingerprint-192.png" />
+  <link rel="apple-touch-icon" href="assets/fingerprint-192.png" />
+  <link rel="manifest" href="site.webmanifest" />
+  <link rel="preconnect" href="https://cdnjs.cloudflare.com" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" />
+  <style>
+    :root {
+      color-scheme: light;
+      --blue: #0b76ef;
+      --blue-dark: #075ec0;
+      --green: #18b66a;
+      --green-dark: #0f9554;
+      --amber: #f59e0b;
+      --ink: #172033;
+      --muted: #5c6b82;
+      --line: #dbe7f4;
+      --soft: #f5f9fd;
+      --paper: #ffffff;
+      --dark: #111f35;
+      --shadow: 0 16px 40px rgba(23, 32, 51, .10);
+    }
+
+    * { box-sizing: border-box; min-width: 0; }
+    html { scroll-behavior: smooth; max-width: 100%; overflow-x: hidden; }
+    body {
+      margin: 0;
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      color: var(--ink);
+      background: #fff;
+      line-height: 1.6;
+      max-width: 100%;
+      overflow-x: hidden;
+    }
+
+    a { color: inherit; text-decoration: none; }
+    p, h1, h2, h3 { margin-top: 0; }
+    button { font: inherit; }
+
+    .topbar {
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 12px clamp(14px, 4vw, 54px);
+      border-bottom: 1px solid rgba(219, 231, 244, .92);
+      background: rgba(255, 255, 255, .94);
+      backdrop-filter: blur(12px);
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-weight: 900;
+      letter-spacing: -.2px;
+    }
+
+    .brand-mark {
+      display: grid;
+      width: 34px;
+      height: 34px;
+      place-items: center;
+      border-radius: 10px;
+      background: var(--blue);
+      color: #fff;
+      box-shadow: 0 10px 22px rgba(11, 118, 239, .25);
+    }
+
+    .nav {
+      display: flex;
+      align-items: center;
+      gap: 18px;
+      color: var(--muted);
+      font-size: 14px;
+      font-weight: 800;
+    }
+
+    .print-button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      min-height: 40px;
+      border: 0;
+      border-radius: 10px;
+      background: var(--blue);
+      color: #fff;
+      padding: 0 14px;
+      font-weight: 900;
+      cursor: pointer;
+    }
+
+    .hero {
+      background:
+        linear-gradient(135deg, rgba(8, 18, 35, .95), rgba(8, 18, 35, .80), rgba(11, 118, 239, .35)),
+        url("assets/product-preview.png") center / cover no-repeat,
+        #12223a;
+      color: #fff;
+    }
+
+    .hero-inner, .section-inner {
+      width: min(1120px, calc(100% - 36px));
+      margin: 0 auto;
+    }
+
+    .hero-inner { padding: 92px 0 56px; }
+
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 16px;
+      border: 1px solid rgba(255, 255, 255, .24);
+      border-radius: 999px;
+      background: rgba(255, 255, 255, .12);
+      padding: 7px 12px;
+      color: rgba(255, 255, 255, .92);
+      font-size: 13px;
+      font-weight: 900;
+    }
+
+    h1 {
+      max-width: 860px;
+      margin-bottom: 16px;
+      font-size: clamp(34px, 6vw, 58px);
+      line-height: 1.04;
+      letter-spacing: -.7px;
+    }
+
+    .hero-copy {
+      max-width: 760px;
+      margin-bottom: 24px;
+      color: rgba(255, 255, 255, .88);
+      font-size: 18px;
+    }
+
+    .hero-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-bottom: 32px;
+    }
+
+    .primary-link, .secondary-link, .cta-whatsapp, .cta-outline {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      min-height: 46px;
+      border-radius: 10px;
+      padding: 0 18px;
+      font-weight: 900;
+    }
+
+    .primary-link { background: var(--blue); color: #fff; }
+    .secondary-link { border: 1px solid rgba(255, 255, 255, .68); color: #fff; }
+
+    .hero-points {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 12px;
+      max-width: 980px;
+    }
+
+    .hero-point {
+      border: 1px solid rgba(255, 255, 255, .18);
+      border-radius: 14px;
+      background: rgba(255, 255, 255, .11);
+      padding: 15px;
+    }
+
+    .hero-point b { display: block; font-size: 18px; }
+    .hero-point span { display: block; margin-top: 4px; color: rgba(255, 255, 255, .76); font-size: 13px; font-weight: 700; }
+
+    section { padding: 64px clamp(14px, 4vw, 54px); }
+    .band-soft { background: var(--soft); }
+    .band-dark { background: var(--dark); color: #fff; }
+    .band-dark .lead, .band-dark p { color: rgba(255,255,255,.76); }
+
+    .section-head {
+      display: grid;
+      grid-template-columns: minmax(0, .9fr) minmax(0, 1fr);
+      gap: 32px;
+      align-items: end;
+      margin-bottom: 26px;
+    }
+
+    .section-kicker {
+      margin-bottom: 8px;
+      color: var(--blue);
+      font-size: 13px;
+      font-weight: 950;
+      text-transform: uppercase;
+      letter-spacing: .4px;
+    }
+
+    .band-dark .section-kicker { color: #72b6ff; }
+
+    h2 {
+      margin-bottom: 0;
+      font-size: clamp(26px, 4vw, 38px);
+      line-height: 1.14;
+      letter-spacing: -.3px;
+    }
+
+    .lead { margin-bottom: 0; color: var(--muted); font-size: 16px; }
+
+    .grid-2, .grid-3, .grid-4 { display: grid; gap: 16px; }
+    .grid-2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .grid-3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+    .grid-4 { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+
+    .card, .feature, .faq, .step {
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      background: var(--paper);
+      padding: 20px;
+      box-shadow: 0 10px 26px rgba(23, 32, 51, .05);
+    }
+
+    .band-dark .step { border-color: rgba(255,255,255,.14); background: rgba(255,255,255,.07); box-shadow: none; }
+
+    .feature i, .card-icon, .faq i {
+      display: grid;
+      width: 42px;
+      height: 42px;
+      margin-bottom: 15px;
+      place-items: center;
+      border-radius: 12px;
+      background: #eaf3ff;
+      color: var(--blue);
+      font-size: 18px;
+    }
+
+    .feature h3, .faq h3, .step h3 { margin-bottom: 8px; font-size: 18px; line-height: 1.25; }
+    .feature p, .faq p, .step p { margin-bottom: 0; color: var(--muted); font-size: 14px; }
+    .band-dark .step p { color: rgba(255,255,255,.74); }
+
+    .package-card {
+      position: relative;
+      overflow: hidden;
+      border: 1px solid var(--line);
+      border-radius: 20px;
+      background: #fff;
+      padding: 24px;
+      box-shadow: var(--shadow);
+    }
+
+    .package-card.highlight {
+      border: 2px solid rgba(11, 118, 239, .55);
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      width: fit-content;
+      margin-bottom: 12px;
+      border-radius: 999px;
+      padding: 7px 11px;
+      background: #eaf3ff;
+      color: var(--blue);
+      font-size: 12px;
+      font-weight: 950;
+      text-transform: uppercase;
+    }
+
+    .badge.green { background: #e9fbf1; color: var(--green-dark); }
+    .package-card h3 { margin-bottom: 6px; font-size: 25px; line-height: 1.18; }
+    .package-desc { color: var(--muted); margin-bottom: 16px; font-size: 14px; }
+
+    .price {
+      display: flex;
+      align-items: flex-end;
+      gap: 6px;
+      margin-bottom: 18px;
+      color: var(--ink);
+    }
+
+    .price strong { font-size: 34px; line-height: 1; letter-spacing: -.5px; }
+    .price span { color: var(--muted); font-weight: 800; padding-bottom: 3px; }
+
+    .package-list {
+      display: grid;
+      gap: 10px;
+      margin: 0;
+      padding: 0;
+      list-style: none;
+    }
+
+    .package-list li {
+      display: flex;
+      gap: 9px;
+      color: #34445d;
+      font-size: 14px;
+      font-weight: 750;
+    }
+
+    .package-list i { color: var(--green); margin-top: 4px; }
+
+    .recommendation-box {
+      margin-top: 18px;
+      border-radius: 14px;
+      background: #f7fbff;
+      padding: 14px;
+      color: #34445d;
+      font-size: 14px;
+      font-weight: 800;
+    }
+
+    .compare-note {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      margin-bottom: 16px;
+      border-radius: 14px;
+      background: #fff7e8;
+      padding: 14px;
+      color: #714b00;
+      font-size: 14px;
+      font-weight: 800;
+    }
+
+    .compare-note i { margin-top: 3px; color: var(--amber); }
+
+    .comparison-wrap {
+      width: 100%;
+      overflow-x: auto;
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      background: #fff;
+      -webkit-overflow-scrolling: touch;
+    }
+
+    .comparison {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 14px;
+    }
+
+    .comparison th, .comparison td {
+      padding: 15px;
+      border-bottom: 1px solid var(--line);
+      text-align: left;
+      vertical-align: top;
+    }
+
+    .comparison th {
+      position: sticky;
+      top: 0;
+      background: #eaf3ff;
+      color: #1e3350;
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: .3px;
+    }
+
+    .comparison tr:last-child td { border-bottom: 0; }
+    .yes { color: var(--green-dark); font-weight: 950; }
+    .limited { color: #9a6500; font-weight: 950; }
+    .no { color: #b42318; font-weight: 950; }
+
+    .mobile-compare-cards { display: none; gap: 14px; }
+    .compare-card {
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      background: #fff;
+      padding: 16px;
+      box-shadow: 0 10px 26px rgba(23, 32, 51, .05);
+    }
+    .compare-card h3 { margin-bottom: 10px; font-size: 17px; }
+    .compare-row { display: grid; grid-template-columns: 1fr; gap: 6px; padding: 10px 0; border-top: 1px solid #eef4fa; }
+    .compare-row:first-of-type { border-top: 0; }
+    .compare-label { color: var(--muted); font-size: 12px; font-weight: 900; text-transform: uppercase; }
+    .compare-value { color: #26364d; font-size: 14px; font-weight: 780; }
+    .mobile-status {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      width: fit-content;
+      margin-bottom: 4px;
+      border-radius: 999px;
+      padding: 5px 9px;
+      font-size: 12px;
+      font-weight: 950;
+    }
+    .mobile-status.yes { background: #e8f8ef; color: #067647; }
+    .mobile-status.no { background: #fff0f0; color: #b42318; }
+    .mobile-status.limited { background: #fff7e8; color: #9a6500; }
+
+    .workflow { counter-reset: step; }
+    .step { position: relative; counter-increment: step; }
+    .step:before {
+      content: counter(step);
+      display: grid;
+      width: 34px;
+      height: 34px;
+      margin-bottom: 14px;
+      place-items: center;
+      border-radius: 999px;
+      background: var(--blue);
+      color: #fff;
+      font-weight: 950;
+    }
+
+    .bottom-cta {
+      padding-bottom: 76px;
+      background:
+        radial-gradient(circle at top left, rgba(24, 182, 106, .18), transparent 34%),
+        linear-gradient(135deg, #0f2038, #0b3e76 58%, #075ec0);
+      color: #fff;
+    }
+
+    .cta-box {
+      border: 1px solid rgba(255, 255, 255, .18);
+      border-radius: 22px;
+      background: rgba(255, 255, 255, .10);
+      padding: 30px;
+      box-shadow: 0 20px 50px rgba(0,0,0,.14);
+    }
+
+    .cta-box h2 { max-width: 850px; margin-bottom: 12px; }
+    .cta-box p { max-width: 820px; margin-bottom: 0; color: rgba(255,255,255,.82); }
+
+    .cta-actions {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 12px;
+      margin-top: 22px;
+    }
+
+    .cta-whatsapp { background: var(--green); color: #fff; min-height: 54px; font-size: 16px; }
+    .cta-outline { border: 1px solid rgba(255,255,255,.36); color: #fff; min-height: 54px; }
+
+    .contact-box {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 12px;
+      margin-top: 20px;
+    }
+
+    .contact-item {
+      border: 1px solid rgba(255,255,255,.22);
+      border-radius: 14px;
+      padding: 14px;
+      color: rgba(255,255,255,.88);
+      font-size: 14px;
+      font-weight: 800;
+    }
+
+    .footer {
+      padding: 24px clamp(14px, 4vw, 54px);
+      border-top: 1px solid var(--line);
+      color: var(--muted);
+      font-size: 13px;
+      text-align: center;
+    }
+
+    @media (max-width: 980px) {
+      .nav { display: none; }
+      .hero-points, .grid-2, .grid-3, .grid-4, .section-head, .contact-box { grid-template-columns: 1fr; }
+      .section-head { gap: 12px; }
+      section { padding-top: 52px; padding-bottom: 52px; }
+    }
+
+    @media (max-width: 700px) {
+      .topbar { padding: 10px 14px; }
+      .brand { font-size: 14px; }
+      .brand-mark { width: 30px; height: 30px; border-radius: 9px; }
+      .print-button { min-height: 38px; padding: 0 10px; font-size: 12px; white-space: nowrap; }
+      .hero-inner, .section-inner { width: calc(100% - 28px); }
+      .hero-inner { padding: 62px 0 38px; }
+      .eyebrow { font-size: 11px; line-height: 1.35; }
+      .hero-copy, .lead { font-size: 15px; }
+      .hero-actions a, .primary-link, .secondary-link, .cta-whatsapp, .cta-outline { width: 100%; }
+      section { padding: 42px 14px; }
+      .package-card, .card, .feature, .faq, .step, .cta-box { padding: 17px; border-radius: 16px; }
+      .price strong { font-size: 30px; }
+      .comparison-wrap { display: none; }
+      .mobile-compare-cards { display: grid; }
+      .cta-actions { grid-template-columns: 1fr; }
+      .bottom-cta { padding-bottom: 48px; }
+    }
+
+    @media print {
+      @page { size: A4; margin: 12mm; }
+      body { color: #111827; font-size: 10.5pt; }
+      .topbar, .hero-actions, .footer { display: none !important; }
+      .hero { background: #0f2038 !important; color: #fff; print-color-adjust: exact; -webkit-print-color-adjust: exact; }
+      .hero-inner { padding: 26px 0; width: 100%; }
+      .section-inner { width: 100%; }
+      section { padding: 22px 0; break-inside: avoid; }
+      .grid-2, .grid-3, .grid-4, .hero-points, .section-head, .contact-box, .cta-actions { grid-template-columns: 1fr; gap: 8px; }
+      .card, .feature, .faq, .step, .package-card, .cta-box { box-shadow: none; break-inside: avoid; }
+      .comparison-wrap { display: block; overflow: visible; }
+      .mobile-compare-cards { display: none; }
+    }
+  </style>
+</head>
+<body>
+  <header class="topbar">
+    <a class="brand" href="#top" aria-label="Presensi Digital">
+      <span class="brand-mark"><i class="fa-solid fa-fingerprint"></i></span>
+      <span>Presensi Digital</span>
+    </a>
+    <nav class="nav" aria-label="Navigasi">
+      <a href="#paket">Paket</a>
+      <a href="#fitur">Fitur</a>
+      <a href="#perbandingan">Perbandingan</a>
+      <a href="#alur">Alur</a>
+      <a href="#whatsapp">WhatsApp</a>
+    </nav>
+    <button class="print-button" type="button" onclick="window.print()">
+      <i class="fa-solid fa-file-pdf"></i>
+      Cetak PDF
+    </button>
+  </header>
+
+  <main id="top">
+    <section class="hero" aria-label="Pilihan paket absensi">
+      <div class="hero-inner">
+        <div class="eyebrow"><i class="fa-solid fa-location-crosshairs"></i> 2 Pilihan Absensi: Berlangganan atau Sekali Bayar</div>
+        <h1>Absensi online untuk perusahaan, sekolah, instansi, dan tim lapangan.</h1>
+        <p class="hero-copy">Pilih sistem absensi sesuai kebutuhan: paket cloud berlangganan untuk bisnis yang ingin layanan lebih lengkap dan berkembang, atau paket sekali bayar untuk instansi kecil yang ingin punya absensi sendiri tanpa biaya bulanan.</p>
+        <div class="hero-actions">
+          <a class="primary-link" href="#paket"><i class="fa-solid fa-table-list"></i> Lihat Pilihan Paket</a>
+          <a class="secondary-link" href="#perbandingan">Bandingkan Fitur</a>
+        </div>
+        <div class="hero-points" aria-label="Poin utama">
+          <div class="hero-point"><b>GPS Radius</b><span>Batasi lokasi absen sesuai titik instansi.</span></div>
+          <div class="hero-point"><b>Admin & User</b><span>Ada dashboard admin dan halaman karyawan.</span></div>
+          <div class="hero-point"><b>Izin & Cuti</b><span>Pengajuan lebih rapi dan mudah dipantau.</span></div>
+          <div class="hero-point"><b>Rekap Data</b><span>Data absensi siap dicek dan diekspor.</span></div>
+        </div>
+      </div>
+    </section>
+
+    <section id="paket" class="band-soft">
+      <div class="section-inner">
+        <div class="section-head">
+          <div>
+            <p class="section-kicker">Nama Produk</p>
+            <h2>Rekomendasi penamaan untuk 2 jenis absensi.</h2>
+          </div>
+          <p class="lead">Agar customer cepat paham, gunakan nama yang langsung membedakan model pembayaran dan target pengguna.</p>
+        </div>
+
+        <div class="grid-2">
+          <article class="package-card highlight">
+            <span class="badge"><i class="fa-solid fa-cloud"></i> Berlangganan</span>
+            <h3>Presensi Cloud Pro</h3>
+            <p class="package-desc">Nama ini cocok untuk paket Rp. 5.000/user/bulan karena terdengar modern, fleksibel, dan siap dipakai untuk perusahaan yang jumlah karyawannya bisa bertambah.</p>
+            <div class="price"><strong>Rp. 5.000</strong><span>/ user / bulan</span></div>
+            <ul class="package-list">
+              <li><i class="fa-solid fa-check"></i><span>Cocok untuk perusahaan yang ingin layanan berjalan terus.</span></li>
+              <li><i class="fa-solid fa-check"></i><span>Lebih cocok untuk banyak karyawan, cabang, WFH, dan dinas luar.</span></li>
+              <li><i class="fa-solid fa-check"></i><span>Fitur dapat terus dikembangkan sesuai kebutuhan operasional.</span></li>
+            </ul>
+            <div class="recommendation-box">Saran posisi: jadikan paket utama untuk bisnis, kantor, sekolah besar, toko bercabang, dan tim lapangan.</div>
+          </article>
+
+          <article class="package-card">
+            <span class="badge green"><i class="fa-solid fa-crown"></i> Sekali Bayar</span>
+            <h3>Presensi Mandiri Lifetime</h3>
+            <p class="package-desc">Nama ini cocok untuk paket Rp. 375.000 sekali bayar karena menekankan bahwa customer punya sistem absensi sederhana yang bisa dipakai jangka panjang.</p>
+            <div class="price"><strong>Rp. 375.000</strong><span>sekali bayar</span></div>
+            <ul class="package-list">
+              <li><i class="fa-solid fa-check"></i><span>Cocok untuk instansi kecil yang ingin biaya ringan.</span></li>
+              <li><i class="fa-solid fa-check"></i><span>Fitur inti sudah cukup untuk absensi masuk, pulang, izin, cuti, dan rekap.</span></li>
+              <li><i class="fa-solid fa-check"></i><span>Tanpa biaya bulanan untuk penggunaan dasar.</span></li>
+            </ul>
+            <div class="recommendation-box">Saran posisi: jadikan paket hemat untuk sekolah kecil, kantor kecil, komunitas, toko, atau instansi yang baru mulai digitalisasi.</div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section id="fitur">
+      <div class="section-inner">
+        <div class="section-head">
+          <div>
+            <p class="section-kicker">Fitur Utama</p>
+            <h2>Fitur utama yang paling dicari customer.</h2>
+          </div>
+          <p class="lead">Bagian ini menjelaskan fungsi utama aplikasi dengan bahasa yang mudah dipahami, agar customer langsung tahu manfaatnya sebelum memilih paket.</p>
+        </div>
+
+        <div class="grid-3">
+          <article class="feature">
+            <i class="fa-solid fa-user-lock"></i>
+            <h3>Login Admin dan User</h3>
+            <p>Admin mengatur sistem, sedangkan user cukup membuka HP untuk absen, melihat riwayat, dan mengajukan izin atau cuti.</p>
+          </article>
+          <article class="feature">
+            <i class="fa-solid fa-clock"></i>
+            <h3>Jam Kerja, Shift, dan Istirahat</h3>
+            <p>Paket Cloud Pro mendukung jam masuk, jam pulang, multi shift, mulai istirahat, dan selesai istirahat. Paket Lifetime fokus pada jam masuk dan pulang utama.</p>
+          </article>
+          <article class="feature">
+            <i class="fa-solid fa-location-dot"></i>
+            <h3>Radius Lokasi Absensi</h3>
+            <p>Absensi bisa dibatasi berdasarkan titik lokasi. Customer dapat memastikan user benar-benar absen dari area kerja yang ditentukan.</p>
+          </article>
+          <article class="feature">
+            <i class="fa-solid fa-house-laptop"></i>
+            <h3>WFH dan Tag Lokasi Rumah</h3>
+            <p>Khusus Cloud Pro, admin dapat mengatur WFH dan menandai lokasi rumah user agar absensi dari rumah tetap terkontrol.</p>
+          </article>
+          <article class="feature">
+            <i class="fa-solid fa-route"></i>
+            <h3>Dinas Luar</h3>
+            <p>Khusus Cloud Pro, user yang bekerja di luar kantor tetap bisa dipantau melalui lokasi tugas, tanggal, dan radius yang ditentukan admin.</p>
+          </article>
+          <article class="feature">
+            <i class="fa-solid fa-book"></i>
+            <h3>Jurnal Harian</h3>
+            <p>Khusus Cloud Pro, user dapat mencatat aktivitas harian sehingga pimpinan tidak hanya tahu siapa yang hadir, tetapi juga apa yang dikerjakan.</p>
+          </article>
+          <article class="feature">
+            <i class="fa-solid fa-chart-column"></i>
+            <h3>Rekap dan Ringkasan Modern</h3>
+            <p>Admin dapat melihat ringkasan hadir, telat, izin, cuti, dan menarik rekap berdasarkan kategori tertentu untuk kebutuhan laporan.</p>
+          </article>
+          <article class="feature">
+            <i class="fa-solid fa-shuffle"></i>
+            <h3>Mutasi Cabang dan Waktu Kerja</h3>
+            <p>Khusus Cloud Pro, jika user pindah cabang, berubah unit, atau berganti jadwal kerja, admin dapat menyesuaikannya dari dashboard.</p>
+          </article>
+          <article class="feature">
+            <i class="fa-solid fa-clock-rotate-left"></i>
+            <h3>Audit Log Aktivitas</h3>
+            <p>Khusus Cloud Pro, aktivitas penting tercatat agar perubahan data lebih transparan dan mengurangi risiko saling menyalahkan.</p>
+          </article>
+          <article class="feature">
+            <i class="fa-solid fa-user-check"></i>
+            <h3>1 User 1 HP</h3>
+            <p>Khusus Cloud Pro, satu akun dapat dibatasi hanya untuk satu perangkat agar titip absen lebih sulit dilakukan.</p>
+          </article>
+          <article class="feature">
+            <i class="fa-solid fa-calendar-days"></i>
+            <h3>Hari Raya dan Libur</h3>
+            <p>Khusus Cloud Pro, admin dapat menambahkan hari libur agar aturan absensi mengikuti kalender kerja instansi.</p>
+          </article>
+          <article class="feature">
+            <i class="fa-solid fa-id-card"></i>
+            <h3>Profil User dan Laporan Berlogo</h3>
+            <p>Dashboard dapat menampilkan foto profil user, nama instansi, logo, serta download rekap dengan identitas perusahaan.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section id="perbandingan" class="band-soft">
+      <div class="section-inner">
+        <div class="section-head">
+          <div>
+            <p class="section-kicker">Tabel Perbandingan</p>
+            <h2>Perbandingan Presensi Cloud Pro dan Presensi Mandiri Lifetime.</h2>
+          </div>
+          <p class="lead">Tabel ini membantu customer memilih paket berdasarkan kebutuhan, bukan hanya berdasarkan harga.</p>
+        </div>
+
+        <div class="compare-note"><i class="fa-solid fa-circle-info"></i><span>Pilih Presensi Cloud Pro untuk fitur operasional lengkap. Pilih Presensi Mandiri Lifetime untuk kebutuhan dasar yang hemat dan sederhana.</span></div>
+
+        <div class="comparison-wrap" aria-label="Tabel perbandingan fitur">
+          <table class="comparison">
+            <thead>
+              <tr>
+                <th>Fitur / Fungsi</th>
+                <th>Presensi Cloud Pro<br>Rp. 5.000/user/bulan</th>
+                <th>Presensi Mandiri Lifetime<br>Rp. 375.000 sekali bayar</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Model pembayaran</td>
+                <td><span class="yes">Berlangganan</span> Rp. 5.000/user/bulan, cocok untuk sistem yang terus dipakai dan dikembangkan.</td>
+                <td><span class="yes">Sekali bayar</span> Rp. 375.000 untuk penggunaan dasar jangka panjang.</td>
+              </tr>
+              <tr>
+                <td>Target customer</td>
+                <td>Perusahaan, sekolah besar, kantor bercabang, tim lapangan, dan bisnis yang butuh kontrol absensi lebih lengkap.</td>
+                <td>Instansi kecil, toko, sekolah kecil, komunitas, atau kantor yang ingin mulai digitalisasi absensi dengan biaya hemat.</td>
+              </tr>
+              <tr>
+                <td>Database / penyimpanan data</td>
+                <td><span class="yes">Firebase</span>. Data lebih cocok untuk sistem online berlangganan karena lebih siap untuk banyak user, akses realtime, dan pengembangan fitur lanjutan.</td>
+                <td><span class="yes">Spreadsheet</span>. Data disimpan lebih sederhana dan cocok untuk paket sekali bayar dengan kebutuhan dasar.</td>
+              </tr>
+              <tr>
+                <td>Login admin dan user</td>
+                <td><span class="yes">Tersedia</span>. Admin mengelola aturan dan data, user melakukan absensi dari HP.</td>
+                <td><span class="yes">Tersedia</span>. Sudah cukup untuk kebutuhan admin dan user sederhana.</td>
+              </tr>
+              <tr>
+                <td>Atur jam masuk dan pulang</td>
+                <td><span class="yes">Lengkap</span>. Bisa mengatur jam masuk, jam pulang, multi shift, mulai istirahat, dan selesai istirahat.</td>
+                <td><span class="yes">Dasar</span>. Bisa mengatur jam masuk dan jam pulang utama.</td>
+              </tr>
+              <tr>
+                <td>Pembatasan radius lokasi</td>
+                <td><span class="yes">Tersedia</span>. Cocok untuk kantor pusat, cabang, titik WFH, dan lokasi dinas luar.</td>
+                <td><span class="yes">Tersedia</span>. Cocok untuk satu lokasi utama atau kebutuhan sederhana.</td>
+              </tr>
+              <tr>
+                <td>WFH</td>
+                <td><span class="yes">Tersedia</span>. Admin dapat mengatur user yang bekerja dari rumah sesuai tanggal dan aturan lokasi.</td>
+                <td><span class="no">Tidak tersedia</span>. Paket ini fokus untuk absensi kantor/lokasi utama.</td>
+              </tr>
+              <tr>
+                <td>Dinas luar</td>
+                <td><span class="yes">Tersedia</span>. Admin dapat mengatur tugas luar, lokasi tujuan, tanggal, dan radius absensi.</td>
+                <td><span class="no">Tidak tersedia</span>. Lebih cocok untuk user yang absen di lokasi tetap.</td>
+              </tr>
+              <tr>
+                <td>Tag lokasi rumah</td>
+                <td><span class="yes">Tersedia</span>. Berguna untuk validasi WFH agar lokasi rumah user tercatat lebih rapi.</td>
+                <td><span class="no">Tidak tersedia</span>.</td>
+              </tr>
+              <tr>
+                <td>1 user hanya bisa login di 1 HP</td>
+                <td><span class="yes">Tersedia</span>. Membantu mengurangi titip absen dan penyalahgunaan akun.</td>
+                <td><span class="limited">Opsional / sesuai versi</span>. Dapat disesuaikan jika dibutuhkan.</td>
+              </tr>
+              <tr>
+                <td>Pengajuan izin dan cuti</td>
+                <td><span class="yes">Tersedia</span> dengan alur approval admin dan data lebih mudah dipantau.</td>
+                <td><span class="yes">Tersedia</span> untuk pencatatan izin dan cuti dasar.</td>
+              </tr>
+              <tr>
+                <td>Jurnal harian</td>
+                <td><span class="yes">Tersedia</span>. User bisa mengisi aktivitas harian sehingga admin tahu pekerjaan yang dilakukan.</td>
+                <td><span class="no">Tidak tersedia</span>.</td>
+              </tr>
+              <tr>
+                <td>Tampilan ringkasan dashboard</td>
+                <td><span class="yes">Lebih modern</span>. Ringkasan hadir, telat, izin, cuti, dan data operasional dibuat lebih jelas.</td>
+                <td><span class="yes">Sederhana</span>. Ringkasan dasar untuk memantau absensi harian.</td>
+              </tr>
+              <tr>
+                <td>Tarik rekap berdasarkan kategori</td>
+                <td><span class="yes">Lengkap</span>. Bisa tarik rekap berdasarkan tanggal, user, cabang/unit, status, dan kategori tertentu.</td>
+                <td><span class="yes">Dasar</span>. Rekap absensi tersedia untuk kebutuhan sederhana.</td>
+              </tr>
+              <tr>
+                <td>Download rekap dengan ikon/logo</td>
+                <td><span class="yes">Tersedia</span>. Laporan dapat dibuat lebih rapi dengan identitas instansi.</td>
+                <td><span class="yes">Tersedia</span> untuk kebutuhan laporan sederhana.</td>
+              </tr>
+              <tr>
+                <td>Logo instansi dan nama perusahaan</td>
+                <td><span class="yes">Tersedia</span>. Tampilan dapat memakai identitas perusahaan/customer.</td>
+                <td><span class="yes">Tersedia</span>. Cocok agar aplikasi terasa milik instansi sendiri.</td>
+              </tr>
+              <tr>
+                <td>Foto profil user pada dashboard</td>
+                <td><span class="yes">Tersedia</span>. Membantu admin mengenali user lebih cepat.</td>
+                <td><span class="limited">Terbatas</span> atau disesuaikan sesuai kebutuhan.</td>
+              </tr>
+              <tr>
+                <td>Timeline harian user</td>
+                <td><span class="yes">Tersedia</span>. User dapat melihat riwayat aktivitas harian, ringkasan mingguan, dan rekap absensi pribadi.</td>
+                <td><span class="limited">Terbatas</span>. Fokus pada catatan absensi dasar.</td>
+              </tr>
+              <tr>
+                <td>Mutasi cabang dan waktu kerja</td>
+                <td><span class="yes">Tersedia</span>. Admin bisa memindahkan user ke cabang, unit, atau aturan waktu kerja yang berbeda.</td>
+                <td><span class="no">Tidak tersedia</span>. Paket ini lebih cocok untuk struktur sederhana.</td>
+              </tr>
+              <tr>
+                <td>Penambahan hari raya/libur</td>
+                <td><span class="yes">Tersedia</span>. Admin bisa menambahkan hari libur agar aturan absensi lebih sesuai kalender kerja.</td>
+                <td><span class="limited">Terbatas</span> atau disesuaikan jika dibutuhkan.</td>
+              </tr>
+              <tr>
+                <td>Ganti password admin dan user</td>
+                <td><span class="yes">Tersedia</span>. Admin dan user dapat mengelola akses dengan lebih aman.</td>
+                <td><span class="yes">Tersedia</span> untuk kebutuhan keamanan dasar.</td>
+              </tr>
+              <tr>
+                <td>Audit log aktivitas</td>
+                <td><span class="yes">Tersedia</span>. Semua aktivitas penting tercatat untuk menghindari saling menyalahkan saat ada perubahan data.</td>
+                <td><span class="no">Tidak tersedia</span>. Paket hemat fokus pada fungsi absensi inti.</td>
+              </tr>
+              <tr>
+                <td>Rekomendasi pilihan</td>
+                <td>Pilih ini jika ingin sistem lebih serius, cocok untuk operasional harian, banyak user, cabang, WFH, dinas luar, dan laporan yang rapi.</td>
+                <td>Pilih ini jika ingin mulai dari sistem absensi sederhana, hemat, dan cukup untuk masuk, pulang, izin, cuti, radius, dan rekap dasar.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="mobile-compare-cards" aria-label="Perbandingan fitur versi mobile">
+          <article class="compare-card">
+            <h3>Presensi Cloud Pro</h3>
+            <div class="compare-row"><span class="compare-label">Harga</span><span class="compare-value"><span class="mobile-status yes"><i class="fa-solid fa-check"></i> Berlangganan</span>Rp. 5.000/user/bulan.</span></div>
+            <div class="compare-row"><span class="compare-label">Database</span><span class="compare-value"><span class="mobile-status yes"><i class="fa-solid fa-check"></i> Ada</span>Menggunakan Firebase, lebih siap untuk sistem online, banyak user, akses realtime, dan pengembangan fitur lanjutan.</span></div>
+            <div class="compare-row"><span class="compare-label">Login admin dan user</span><span class="compare-value"><span class="mobile-status yes"><i class="fa-solid fa-check"></i> Ada</span>Admin mengelola aturan dan data, user melakukan absensi dari HP.</span></div>
+            <div class="compare-row"><span class="compare-label">Jam kerja lengkap</span><span class="compare-value"><span class="mobile-status yes"><i class="fa-solid fa-check"></i> Ada</span>Jam masuk, jam pulang, multi shift, mulai istirahat, dan selesai istirahat.</span></div>
+            <div class="compare-row"><span class="compare-label">Radius lokasi</span><span class="compare-value"><span class="mobile-status yes"><i class="fa-solid fa-check"></i> Ada</span>Radius kantor, cabang, titik WFH, dan lokasi dinas luar.</span></div>
+            <div class="compare-row"><span class="compare-label">WFH</span><span class="compare-value"><span class="mobile-status yes"><i class="fa-solid fa-check"></i> Ada</span>Admin bisa mengatur user yang bekerja dari rumah sesuai tanggal dan aturan lokasi.</span></div>
+            <div class="compare-row"><span class="compare-label">Dinas luar</span><span class="compare-value"><span class="mobile-status yes"><i class="fa-solid fa-check"></i> Ada</span>Admin bisa membuat tugas luar, lokasi tujuan, tanggal, dan radius absensi.</span></div>
+            <div class="compare-row"><span class="compare-label">Tag lokasi rumah</span><span class="compare-value"><span class="mobile-status yes"><i class="fa-solid fa-check"></i> Ada</span>Berguna untuk validasi WFH agar lokasi rumah user tercatat rapi.</span></div>
+            <div class="compare-row"><span class="compare-label">1 user 1 HP</span><span class="compare-value"><span class="mobile-status yes"><i class="fa-solid fa-check"></i> Ada</span>Membantu mengurangi titip absen dan penyalahgunaan akun.</span></div>
+            <div class="compare-row"><span class="compare-label">Izin dan cuti</span><span class="compare-value"><span class="mobile-status yes"><i class="fa-solid fa-check"></i> Ada</span>Pengajuan user masuk ke admin untuk dipantau dan disetujui.</span></div>
+            <div class="compare-row"><span class="compare-label">Jurnal harian</span><span class="compare-value"><span class="mobile-status yes"><i class="fa-solid fa-check"></i> Ada</span>User bisa mengisi aktivitas harian sehingga admin tahu pekerjaan yang dilakukan.</span></div>
+            <div class="compare-row"><span class="compare-label">Ringkasan dashboard</span><span class="compare-value"><span class="mobile-status yes"><i class="fa-solid fa-check"></i> Ada</span>Tampilan lebih modern untuk hadir, telat, izin, cuti, dan data operasional.</span></div>
+            <div class="compare-row"><span class="compare-label">Rekap kategori</span><span class="compare-value"><span class="mobile-status yes"><i class="fa-solid fa-check"></i> Ada</span>Bisa tarik rekap berdasarkan tanggal, user, cabang/unit, status, dan kategori tertentu.</span></div>
+            <div class="compare-row"><span class="compare-label">Download laporan berlogo</span><span class="compare-value"><span class="mobile-status yes"><i class="fa-solid fa-check"></i> Ada</span>Laporan lebih rapi dengan identitas instansi.</span></div>
+            <div class="compare-row"><span class="compare-label">Foto profil user</span><span class="compare-value"><span class="mobile-status yes"><i class="fa-solid fa-check"></i> Ada</span>Admin lebih mudah mengenali user pada dashboard.</span></div>
+            <div class="compare-row"><span class="compare-label">Timeline user</span><span class="compare-value"><span class="mobile-status yes"><i class="fa-solid fa-check"></i> Ada</span>User bisa melihat timeline harian, ringkasan mingguan, dan rekap absensi pribadi.</span></div>
+            <div class="compare-row"><span class="compare-label">Mutasi cabang/waktu</span><span class="compare-value"><span class="mobile-status yes"><i class="fa-solid fa-check"></i> Ada</span>Admin bisa memindahkan user ke cabang, unit, atau aturan waktu kerja berbeda.</span></div>
+            <div class="compare-row"><span class="compare-label">Hari raya/libur</span><span class="compare-value"><span class="mobile-status yes"><i class="fa-solid fa-check"></i> Ada</span>Admin bisa menambahkan hari libur agar aturan absensi sesuai kalender kerja.</span></div>
+            <div class="compare-row"><span class="compare-label">Ganti password</span><span class="compare-value"><span class="mobile-status yes"><i class="fa-solid fa-check"></i> Ada</span>Admin dan user dapat mengelola akses dengan lebih aman.</span></div>
+            <div class="compare-row"><span class="compare-label">Audit log aktivitas</span><span class="compare-value"><span class="mobile-status yes"><i class="fa-solid fa-check"></i> Ada</span>Aktivitas penting tercatat agar perubahan data jelas dan tidak saling menyalahkan.</span></div>
+          </article>
+
+          <article class="compare-card">
+            <h3>Presensi Mandiri Lifetime</h3>
+            <div class="compare-row"><span class="compare-label">Harga</span><span class="compare-value"><span class="mobile-status yes"><i class="fa-solid fa-check"></i> Sekali bayar</span>Rp. 375.000 untuk penggunaan dasar jangka panjang.</span></div>
+            <div class="compare-row"><span class="compare-label">Database</span><span class="compare-value"><span class="mobile-status yes"><i class="fa-solid fa-check"></i> Ada</span>Menggunakan Spreadsheet, lebih sederhana dan cocok untuk paket sekali bayar kebutuhan dasar.</span></div>
+            <div class="compare-row"><span class="compare-label">Login admin dan user</span><span class="compare-value"><span class="mobile-status yes"><i class="fa-solid fa-check"></i> Ada</span>Cukup untuk kebutuhan admin dan user sederhana.</span></div>
+            <div class="compare-row"><span class="compare-label">Jam kerja lengkap</span><span class="compare-value"><span class="mobile-status limited"><i class="fa-solid fa-minus"></i> Terbatas</span>Jam masuk dan jam pulang utama. Multi shift dan tombol istirahat tidak dibuat selengkap Cloud Pro.</span></div>
+            <div class="compare-row"><span class="compare-label">Radius lokasi</span><span class="compare-value"><span class="mobile-status yes"><i class="fa-solid fa-check"></i> Ada</span>Cocok untuk satu lokasi utama atau kebutuhan sederhana.</span></div>
+            <div class="compare-row"><span class="compare-label">WFH</span><span class="compare-value"><span class="mobile-status no"><i class="fa-solid fa-xmark"></i> Tidak ada</span>Paket ini fokus untuk absensi kantor/lokasi utama.</span></div>
+            <div class="compare-row"><span class="compare-label">Dinas luar</span><span class="compare-value"><span class="mobile-status no"><i class="fa-solid fa-xmark"></i> Tidak ada</span>Lebih cocok untuk user yang absen di lokasi tetap.</span></div>
+            <div class="compare-row"><span class="compare-label">Tag lokasi rumah</span><span class="compare-value"><span class="mobile-status no"><i class="fa-solid fa-xmark"></i> Tidak ada</span>Tidak tersedia karena fitur WFH tidak termasuk di paket ini.</span></div>
+            <div class="compare-row"><span class="compare-label">1 user 1 HP</span><span class="compare-value"><span class="mobile-status limited"><i class="fa-solid fa-minus"></i> Opsional</span>Dapat disesuaikan jika dibutuhkan.</span></div>
+            <div class="compare-row"><span class="compare-label">Izin dan cuti</span><span class="compare-value"><span class="mobile-status yes"><i class="fa-solid fa-check"></i> Ada</span>Tersedia untuk pencatatan izin dan cuti dasar.</span></div>
+            <div class="compare-row"><span class="compare-label">Jurnal harian</span><span class="compare-value"><span class="mobile-status no"><i class="fa-solid fa-xmark"></i> Tidak ada</span>Paket hemat fokus pada absensi inti.</span></div>
+            <div class="compare-row"><span class="compare-label">Ringkasan dashboard</span><span class="compare-value"><span class="mobile-status yes"><i class="fa-solid fa-check"></i> Ada</span>Ringkasan sederhana untuk memantau absensi harian.</span></div>
+            <div class="compare-row"><span class="compare-label">Rekap kategori</span><span class="compare-value"><span class="mobile-status limited"><i class="fa-solid fa-minus"></i> Terbatas</span>Rekap dasar tersedia untuk kebutuhan sederhana.</span></div>
+            <div class="compare-row"><span class="compare-label">Download laporan berlogo</span><span class="compare-value"><span class="mobile-status yes"><i class="fa-solid fa-check"></i> Ada</span>Tersedia untuk kebutuhan laporan sederhana.</span></div>
+            <div class="compare-row"><span class="compare-label">Foto profil user</span><span class="compare-value"><span class="mobile-status limited"><i class="fa-solid fa-minus"></i> Terbatas</span>Dapat disesuaikan sesuai kebutuhan.</span></div>
+            <div class="compare-row"><span class="compare-label">Timeline user</span><span class="compare-value"><span class="mobile-status limited"><i class="fa-solid fa-minus"></i> Terbatas</span>Fokus pada catatan absensi dasar.</span></div>
+            <div class="compare-row"><span class="compare-label">Mutasi cabang/waktu</span><span class="compare-value"><span class="mobile-status no"><i class="fa-solid fa-xmark"></i> Tidak ada</span>Lebih cocok untuk struktur sederhana.</span></div>
+            <div class="compare-row"><span class="compare-label">Hari raya/libur</span><span class="compare-value"><span class="mobile-status limited"><i class="fa-solid fa-minus"></i> Terbatas</span>Dapat disesuaikan jika dibutuhkan.</span></div>
+            <div class="compare-row"><span class="compare-label">Ganti password</span><span class="compare-value"><span class="mobile-status yes"><i class="fa-solid fa-check"></i> Ada</span>Tersedia untuk kebutuhan keamanan dasar.</span></div>
+            <div class="compare-row"><span class="compare-label">Audit log aktivitas</span><span class="compare-value"><span class="mobile-status no"><i class="fa-solid fa-xmark"></i> Tidak ada</span>Paket hemat fokus pada fungsi absensi inti.</span></div>
+          </article>
+        </div>      </div>
+    </section>
+
+    <section id="alur" class="band-dark">
+      <div class="section-inner">
+        <div class="section-head">
+          <div>
+            <p class="section-kicker">Alur Kerja</p>
+            <h2>Cara kerja aplikasi dibuat sederhana untuk admin dan user.</h2>
+          </div>
+          <p class="lead">Alur ini bisa membantu customer membayangkan proses penggunaan sejak awal sampai rekap laporan.</p>
+        </div>
+
+        <div class="grid-4 workflow">
+          <article class="step">
+            <h3>Admin Login</h3>
+            <p>Admin masuk ke dashboard untuk mengatur identitas instansi, jam kerja, lokasi, radius, dan data user.</p>
+          </article>
+          <article class="step">
+            <h3>User Absen</h3>
+            <p>User login dari HP, mengambil presensi masuk atau pulang, lalu sistem membaca waktu dan lokasi.</p>
+          </article>
+          <article class="step">
+            <h3>Izin dan Cuti</h3>
+            <p>User dapat mengajukan izin atau cuti, sementara admin dapat memantau pengajuan dari dashboard.</p>
+          </article>
+          <article class="step">
+            <h3>Rekap Data</h3>
+            <p>Admin melihat hasil absensi, status kehadiran, keterlambatan, izin, cuti, dan data laporan.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section id="faq" class="band-soft">
+      <div class="section-inner">
+        <div class="section-head">
+          <div>
+            <p class="section-kicker">Pertanyaan Umum</p>
+            <h2>Jawaban singkat sebelum customer menghubungi WhatsApp.</h2>
+          </div>
+          <p class="lead">Bagian FAQ membantu mengurangi pertanyaan berulang dan membuat customer lebih siap untuk bertanya paket yang sesuai.</p>
+        </div>
+
+        <div class="grid-2">
+          <article class="faq">
+            <i class="fa-solid fa-circle-question"></i>
+            <h3>Apa bedanya paket bulanan dan sekali bayar?</h3>
+            <p>Paket bulanan cocok untuk operasional yang lebih lengkap seperti multi shift, WFH, dinas luar, jurnal, audit log, dan rekap detail. Paket sekali bayar cocok untuk kebutuhan dasar dengan biaya ringan.</p>
+          </article>
+          <article class="faq">
+            <i class="fa-solid fa-circle-question"></i>
+            <h3>Apakah paket sekali bayar tetap ada admin dan user?</h3>
+            <p>Ya. Paket sekali bayar tetap memiliki fitur login admin dan user, pengaturan jam, radius, izin/cuti, rekap, logo, dan nama instansi.</p>
+          </article>
+          <article class="faq">
+            <i class="fa-solid fa-circle-question"></i>
+            <h3>Apakah bisa pakai logo dan nama perusahaan sendiri?</h3>
+            <p>Bisa. Kedua paket dapat menggunakan nama perusahaan atau instansi dan logo agar tampil lebih profesional.</p>
+          </article>
+          <article class="faq">
+            <i class="fa-solid fa-circle-question"></i>
+            <h3>Paket mana yang paling disarankan?</h3>
+            <p>Untuk perusahaan yang butuh kontrol lengkap, pilih Presensi Cloud Pro. Untuk instansi kecil yang hanya butuh absen masuk, pulang, izin, cuti, radius, logo, dan rekap dasar, pilih Presensi Mandiri Lifetime.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section id="whatsapp" class="bottom-cta">
+      <div class="section-inner">
+        <div class="cta-box">
+          <p class="section-kicker">Konsultasi Paket</p>
+          <h2>Sudah baca fitur dan perbandingannya? Sekarang pilih paket yang paling cocok.</h2>
+          <p>Chat admin melalui WhatsApp untuk tanya demo, konsultasi jumlah karyawan, atau menentukan apakah lebih cocok menggunakan Presensi Cloud Pro atau Presensi Mandiri Lifetime.</p>
+          <div class="cta-actions">
+            <a class="cta-whatsapp" href="https://wa.me/62882020757881?text=Halo%20Admin%2C%20saya%20ingin%20konsultasi%20paket%20absensi.%20Saya%20tertarik%20dengan%20Presensi%20Cloud%20Pro%20atau%20Presensi%20Mandiri%20Lifetime." target="_blank" rel="noopener"><i class="fa-brands fa-whatsapp"></i> Chat Admin WhatsApp</a>
+            <a class="cta-outline" href="#perbandingan"><i class="fa-solid fa-arrow-up"></i> Lihat Lagi Perbandingan</a>
+          </div>
+          <div class="contact-box">
+            <div class="contact-item"><i class="fa-solid fa-cloud"></i> Presensi Cloud Pro: Rp. 5.000/user/bulan</div>
+            <div class="contact-item"><i class="fa-solid fa-crown"></i> Presensi Mandiri Lifetime: Rp. 375.000 sekali bayar</div>
+            <div class="contact-item"><i class="fa-solid fa-table-list"></i> Pilihan paket: berlangganan atau sekali bayar</div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="section-inner">
+      Presensi Digital - Solusi absensi online dengan pilihan berlangganan atau sekali bayar.
+    </div>
+  </footer>
+</body>
+</html>
